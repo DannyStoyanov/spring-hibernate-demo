@@ -4,11 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.web.bind.annotation.*;
-
+import java.lang.reflect.*;
 @SpringBootApplication
 public class SpringHibernateDemoApplication {
 
@@ -17,6 +13,7 @@ public class SpringHibernateDemoApplication {
         try {
             Logger logger = LoggerFactory.getLogger(SpringHibernateDemoApplication.class);
             logger.info("RUNNING!");
+
         } catch (Exception exception) {
             exception.printStackTrace();
         }

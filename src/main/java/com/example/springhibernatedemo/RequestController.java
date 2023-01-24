@@ -1,49 +1,39 @@
 package com.example.springhibernatedemo;
 
-import org.jetbrains.annotations.NotNull;
-import org.springframework.web.bind.annotation.*;
+import com.example.springhibernatedemo.client.Client;
+import com.example.springhibernatedemo.client.ClientRepository;
+import com.example.springhibernatedemo.server.Server;
+import com.example.springhibernatedemo.server.ServerRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-@SuppressWarnings("unused")
 @RestController
 public class RequestController {
-    private final Service service;
 
-    public RequestController(Service service) {
-        this.service = service;
+    @Autowired
+    private ServerRepository serverRepository;
+    @Autowired
+    private ClientRepository clientRepository;
+
+    public RequestController(ServerRepository serverRepository, ClientRepository clientRepository) {
+        this.serverRepository = serverRepository;
+        this.clientRepository = clientRepository;
     }
 
-    @GetMapping("/servers/")
-    public Object executeGetRequest(@RequestParam(required=false) String ip, @RequestParam(required=false) Integer port) {
-        return this.service.getServers(ip, port);
+    @GetMapping("/client-server/")
+    public void executeGetRelatedData() {
+        // ...
     }
 
-    @GetMapping("/servers/{id}")
-    public Object executeGetServerById(@PathVariable Integer id) {
-        return this.service.getServerById(id).orElse(null);
-    }
-
-    @PostMapping("/create/")
-    public Object executePostRequest(@RequestBody Server server) {
-        this.service.addServer(server);
-        return server;
-    }
-
-    @DeleteMapping("/delete/{ip}/{port}")
-    public void executeDeleteRequest(@PathVariable String ip, @PathVariable int port) {
-        this.service.deleteSpecificServer(ip, port);
-    }
-
-    @DeleteMapping("/delete/{ip}")
-    public void executeDeleteRequest(@PathVariable String ip) {
-        this.service.deleteServer(ip);
-    }
-
-    @PutMapping("/update/")
-    public void executeUpdateRequest(@RequestParam String serverIP, @RequestParam int serverPort, @RequestParam @NotNull String attribute, @RequestParam String newValue) {
-        if (attribute.equals("ip")) {
-            this.service.updateServerIp(serverIP, newValue);
-        } else if (attribute.equals("port")) {
-            this.service.updateServerPort(serverIP, serverPort, Integer.parseInt(newValue));
-        }
+    @PutMapping("/client-server/")
+    public Server executePutRelatedData(@RequestParam Integer serverID, @RequestParam Integer clientID) {
+        Server server = serverRepository.findById(serverID).get();
+        Client client = clientRepository.findById(clientID).get();
+        server.addClient(client);
+        client.addServer(server);
+        return serverRepository.save(server);
     }
 }

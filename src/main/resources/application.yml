@@ -1,8 +1,13 @@
 spring:
+  main:
+    allow-bean-definition-overriding: 'true'
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     password: halodx_root
     username: root
     url: jdbc:mysql://localhost:3306/serversdb
   jpa:
+    hibernate.ddl-auto: update
     show-sql: true
+server:
+  port: 8080

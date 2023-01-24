@@ -1,4 +1,4 @@
-package com.example.springhibernatedemo;
+package com.example.springhibernatedemo.utils;
 
 public class Response {
     private String message;
